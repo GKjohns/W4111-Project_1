@@ -1,0 +1,13 @@
+{% extends "_base.html" %}
+{% block content %}
+  <p>Please log in to continue</p>
+  <form method="POST" action="/attempt_login">
+    <div class="main">
+      <span class="center inline"><td>Username:</td><td>{{ form.username }}</td></span>
+      <br>
+      <span class="center inline">Password:</td><td>{{ form.password }}</span>
+      <br><br>
+      <button type="submit" name="button">Login</button>
+    </div>
+  </form>
+{% endblock %}
