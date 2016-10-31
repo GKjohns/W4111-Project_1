@@ -7,8 +7,8 @@ app.config['SECRET_KEY'] = 'comsw4111'
 app.debug = True
 
 @app.route('/')
-def hello_world():
-    return 'Hello Brave New World!'
+def test_page():
+    return render_template('test.html')
 
 if __name__ == '__main__':
     app.run()
