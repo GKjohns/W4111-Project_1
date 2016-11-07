@@ -1,0 +1,12 @@
+{% extends "_base.html" %}
+{% block content %}
+<h2>Select a show or episode</h2>
+  <div class="shows_list">
+  {% for show in shows %}
+    <h3>{{ show.name }}</h3>
+    {% for episode in sid_to_episodes[show.sid] %}
+      <p>{{ episode.name }}</p>
+    {% endfor %}
+  {% endfor %}
+  </div>
+{% endblock %}
