@@ -28,8 +28,8 @@ def attempt_login():
     else:
         # this is gonna change a ton
         if not user_is_valid:
-            flash('not a registered username ¯\_(ツ)_/¯')
-        elif pw_is_correct:
+            flash('not a registered username')
+        elif not pw_is_correct:
             flash('password is incorrect')
         return login()
     return select_show_movie()

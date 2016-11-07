@@ -13,6 +13,15 @@
       <h1>What 2 Watch</h1>
     </div>
     <div class="page main_centered">
+      <div id="flash_messages", class="main_centered">
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+              <p>{{ message }}</p>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+      </div>
       {% block content %}
       {% endblock %}
     </div>

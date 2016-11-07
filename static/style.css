@@ -20,6 +20,18 @@ div.banner {
   text-align: center;
 }
 
+div#flash_messages {
+  color: #2980B9;
+  list-style: none;
+}
+
+
+
+div#flash_messages li {
+  color: #2980B9;
+  list-style: none;
+}
+
 
 /*form  {
   width: 300px;
