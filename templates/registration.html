@@ -1,0 +1,15 @@
+{% extends "_base.html" %}
+{% block content %}
+<p>
+  <form action="/attempt_register" method="POST">
+    <table class="register_table">
+      <tr><td>User name:</td><td>{{ form.username }}</td></tr>
+      <tr><td>First Name:</td><td>{{ form.first_name }}</td></tr>
+      <tr><td>Last Name</td><td>{{ form.last_name }}</td></tr>
+      <tr><td>Password:</td><td>{{ form.password }}</td></tr>
+      <tr><td>Confirm Password:</td><td>{{ form.confirm }}</td></tr>
+    </table>
+    <button type="submit" name="button">Submit</button>
+  </form>
+</p>
+{% endblock %}

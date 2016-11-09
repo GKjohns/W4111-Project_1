@@ -3,7 +3,7 @@
   <p>Please log in to continue</p>
   <form method="POST" action="/attempt_login">
     <div class="main">
-      <form action="/attemp_login" method="POST">
+      <form action="/attempt_login" method="POST">
         <span class="center inline">Username: {{ form.username }}</span>
         <br>
         <span class="center inline">Password: {{ form.password }}</span>
@@ -12,4 +12,5 @@
       </form>
     </div>
   </form>
+  <p>Don't have an account? <a href="{{ url_for('registration_page') }}">Sign up here</a></p>
 {% endblock %}

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, request, render_template, flash,\
                   session, redirect, url_for
-from forms import LoginForm
+from forms import LoginForm, RegistrationForm
 
 
 app = Flask(__name__)
@@ -11,6 +11,24 @@ app.debug = True
 @app.route('/')
 def login():
     return render_template('login.html', form=LoginForm())
+
+@app.route('/registration_page', methods=['GET', 'POST'])
+def registration_page():
+    form = RegistrationForm()
+    return render_template('registration.html', form=form)
+
+@app.route('/attempt_register', methods=['POST'])
+def attempt_register():
+    form = request.form
+    form_is_good = True
+    # process all the data
+    if form_is_good:
+        flash('Successfully registered!')
+        return login()
+    else:
+        flash('There was a problem with your registration')
+        return registration_page()
+
 
 @app.route('/attempt_login', methods=['POST'])
 def attempt_login():

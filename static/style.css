@@ -26,13 +26,14 @@ div#flash_messages {
 }
 
 
-
 div#flash_messages li {
   color: #2980B9;
   list-style: none;
 }
 
-
+table.register_table {
+  text-align: right;
+}
 /*form  {
   width: 300px;
   text-align: right;
