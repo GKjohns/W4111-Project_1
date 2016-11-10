@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, request, render_template, flash,\
                   session, redirect, url_for
-from forms import LoginForm, RegistrationForm
+from forms import LoginForm, RegistrationForm, AddShowReviewForm
 
 
 app = Flask(__name__)
@@ -51,6 +51,23 @@ def attempt_login():
             flash('password is incorrect')
         return login()
     return select_show_episode()
+
+@app.route('/add_show_review', methods=['POST', 'GET'])
+def add_show_review():
+    form = AddShowReviewForm()
+    return render_template('add_show_review.html', form=form)
+
+@app.route('/process_review', methods=['POST', 'GET'])
+def process_review():
+    form = request.form
+
+    # Use the model to pull data from the database
+
+
+    flash('Review of {} added!'.format(form['show']))
+
+    return select_show_episode()
+
 
 
 @app.route('/select_show_episode', methods=['POST'])
