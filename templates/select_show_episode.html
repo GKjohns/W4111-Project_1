@@ -1,5 +1,9 @@
 {% extends "_base.html" %}
 {% block content %}
+<div class="buttons">
+  <a href="#" class="add_review_btn"><span>Add a show review</span></a> | 
+  <a href="#" class="add_review_btn"><span>Add an episode review</span></a>
+</div>
 <h2>Select a show or episode</h2>
   <div class="shows_list">
   {% for show in shows %}

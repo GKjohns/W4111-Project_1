@@ -34,7 +34,12 @@ div#flash_messages li {
 table.register_table {
   text-align: right;
 }
-/*form  {
-  width: 300px;
-  text-align: right;
-}*/
+
+div.buttons {
+  color: #CCC;
+}
+
+a.add_review_btn {
+  text-decoration: none;
+  color: #AAA;
+}

@@ -12,10 +12,12 @@ app.debug = True
 def login():
     return render_template('login.html', form=LoginForm())
 
+
 @app.route('/registration_page', methods=['GET', 'POST'])
 def registration_page():
     form = RegistrationForm()
     return render_template('registration.html', form=form)
+
 
 @app.route('/attempt_register', methods=['POST'])
 def attempt_register():
@@ -32,9 +34,7 @@ def attempt_register():
 
 @app.route('/attempt_login', methods=['POST'])
 def attempt_login():
-
     form = request.form
-    print form
 
     user_is_valid = form['username'] == 'username'
     pw_is_correct = form['password'] == 'password'
@@ -50,10 +50,11 @@ def attempt_login():
         elif not pw_is_correct:
             flash('password is incorrect')
         return login()
-    return select_show_movie()
+    return select_show_episode()
 
-@app.route('/select_show_movie', methods=['POST'])
-def select_show_movie():
+
+@app.route('/select_show_episode', methods=['POST'])
+def select_show_episode():
 
 
     ######
@@ -85,7 +86,7 @@ def select_show_movie():
              'sid': 3}]
     }
 
-    return render_template('select_show_movie.html', shows=fake_shows,
+    return render_template('select_show_episode.html', shows=fake_shows,
                            sid_to_episodes=sid_to_episodes)
 
 
