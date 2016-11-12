@@ -6,7 +6,7 @@ def get_connection(database_path):
     return sql.create_engine(database_path)  # connects to the database
 
 
-def check_password(self, username, password):
+def check_password(db, username, password):
     '''
     # Note: we can hash the passwords
 
