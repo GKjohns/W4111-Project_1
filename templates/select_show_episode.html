@@ -9,7 +9,7 @@
   {% for show in shows %}
     <a href="{{ url_for('show_reviews', sid=show['sid'], show_name=show['name']) }}" class="show_ep_name"><h3>{{ show['name'] }}</h3></a>
     {% for episode in sid_to_episodes[show.sid] %}
-      <a href="#" class="show_ep_name"><em>{{ episode['name'] }}</em></a>
+      <a href="{{ url_for('episode_reviews' , eid=episode['eid'], sid=show['sid'], show_name = show['name']) }}" class="show_ep_name"><em>{{ episode['name'] }}</em></a>
     {% endfor %}
   {% endfor %}
   </div>

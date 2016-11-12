@@ -1,19 +1,14 @@
 {% extends "_base.html" %}
 {% block content %}
   <div class="reviews_container">
-  {% for review in show_reviews %}
-
-    <h3>{{ review.show}}:Season {{ review.season }}, Ep. {{ review.episode_number}}</h3>
-    <h4>{{ review.name }}</h4>
-    <p>{{ review.text }}</p>
-    <ul>
-    {% for user in review.users %}
-      <li>{{ user.name }}</li>
-    {% endfor %}
-    </ul>
+  {% for review in reviews %}
+    <h3>{{ review['show_name'] }} :Season {{ review['season'] }}, Ep. {{ review['episode_number']}}</h3>
+    <h4>{{ review['episode_name'] }}</h4>
+    <p>{{ review['user_name'] }} @ {{ review['review_time']}}</p>
+    <p>{{ review['text'] }}</p>
+    <p>{{ review['rating']}}</p>
+  {% endfor %}
   </div>
-
-<!--  When this is finished copy it to make the episode reviews template -->
 
 
 {% endblock %}

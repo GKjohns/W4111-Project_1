@@ -3,6 +3,7 @@ from flask import Flask, request, render_template, flash,\
                   session, redirect, url_for, g
 from forms import LoginForm, RegistrationForm, AddShowReviewForm
 from model import *
+import json
 import sqlalchemy
 
 app = Flask(__name__)
@@ -125,7 +126,33 @@ def show_reviews():
         'rating': row[4],
     } for row in review_rows]
     print reviews
-    return render_template('show_reviews.html', reviews=reviews)
+    return render_template('show_reviews.html',
+                           reviews=reviews, show_name=show_name)
+
+@app.route('/episode_reviews', methods=['GET', 'POST'])
+def episode_reviews():
+
+    eid = request.args['eid']
+    show_name = request.args['show_name']
+
+    # prevent injection
+    if not eid.isdigit():
+        flash('error retrieving data, please try again')
+        select_show_episode()
+
+    reviews = get_reviews_for_episode(g.db, eid)
+    reviews_formatted = [{
+        'show_name': show_name,
+        'episode_name': row[0],
+        'season': row[1],
+        'episode_number': row[2],
+        'user_name': '{} {}'.format(row[3], row[4]),
+        'review_time': row[5].strftime('%B %d, %Y'),
+        'text': row[6],
+        'rating': row[7]} for row in reviews]   # an ugly, but useful list comprehension
+    return render_template('episode_reviews.html',
+                            reviews=reviews_formatted,
+                            show_name=show_name)
 
 if __name__ == '__main__':
     app.run()

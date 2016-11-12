@@ -1,6 +1,8 @@
 {% extends "_base.html" %}
 {% block content %}
   <div class="reviews_container">
+  <h2>{{ show_name }}</h2>
+  <br>
   {% if reviews|length == 0 %}
     <em>No reviews yet</em>
   {% endif %}
