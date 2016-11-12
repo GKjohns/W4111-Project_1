@@ -125,7 +125,7 @@ def get_reviews_for_episode(db, eid):
     return cursor.fetchall()
 
 
-def add_review_for_show(self, uid, sid, rating, review_text):
+def add_review_for_show(db, uid, sid, rating, review_text):
     '''
     returns True if review was successfully added
     arguments: user's uid, show's sid, rating, the review's text
@@ -134,7 +134,7 @@ def add_review_for_show(self, uid, sid, rating, review_text):
     pass
 
 
-def add_review_for_eipsode(self, uid, eid, rating, review_text):
+def add_review_for_eipsode(db, uid, eid, rating, review_text):
     '''
     returns True if review was successfully added
     arguments: user's uid, episode's sid, rating, the review's text
