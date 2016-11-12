@@ -19,7 +19,7 @@ def check_password(db, username, password):
     '''
     # execute query for password of first user with matching username
     response = db.execute("SELECT pwd FROM Users WHERE sn = %s", username).fetchall()
-    
+
     # Return False if query returned no results
     if len(response) == 0:
         return False
@@ -79,7 +79,7 @@ def get_name_from_sid(db, sid):
     '''.format(sid)
     cursor = db.execute(query)
 
-    return cursor.fetchone()
+    return cursor.fetchone()[0]
 
 def get_name_from_eid(db, eid):
 
@@ -96,7 +96,7 @@ def get_name_from_eid(db, eid):
     '''.format(eid)
     cursor = db.execute(query)
 
-    return cursor.fetchone()
+    return cursor.fetchone()[0]
 
 
 
@@ -182,6 +182,20 @@ def get_reviews_for_episode(db, eid):
 
     return cursor.fetchall()
 
+def get_uid_from_username(db, username):
+
+    query = """
+        SELECT
+          uid
+        FROM
+          users
+        WHERE
+          sn='{}'
+    """.format(username)
+
+    cursor = db.execute(query)
+
+    return cursor.fetchone()[0]
 
 def add_review_for_show(db, uid, sid, rating, review_text):
     '''

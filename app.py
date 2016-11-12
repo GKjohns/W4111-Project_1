@@ -54,15 +54,15 @@ def attempt_login():
     username = form['username']
     password = form['password']
 
-    if True:
-        session['username'] = form['username']
-        session['logged_in'] = True
-        flash('logged in as {}'.format(username))
-
-    # if check_password(g.db, username, password):
+    # if True:
     #     session['username'] = form['username']
     #     session['logged_in'] = True
     #     flash('logged in as {}'.format(username))
+
+    if check_password(g.db, username, password):
+        session['username'] = form['username']
+        session['logged_in'] = True
+        flash('logged in as {}'.format(username))
 
     else:
         flash('username and/or password is incorrect')
@@ -90,15 +90,26 @@ def add_episode_review():
 @app.route('/process_review', methods=['POST', 'GET'])
 def process_review():
     form = request.form
-    print form
-
-    # Use the model to pull data from the database
+    print session
 
     if form.get('show', False):
-        show_name = get_name_from_sid(g.db, form['show'])[0]
+        show_name = get_name_from_sid(g.db, form['show'])
+        uid = get_uid_from_username(g.db, session['username'])
+        sid = form['show']
+        review_text = form['review_text']
+        rating = form['rating']
+
+        print show_name, uid, sid, review_text, rating
+
+        add_review_for_show(g.db, uid, sid, review_text, rating)
         flash('Review of {} added!'.format(show_name))
     if form.get('episode', False):
-        episode_name = get_name_from_eid(g.db, form['episode'])[0]
+        episode_name = get_name_from_eid(g.db, form['episode'])
+        uid = get_uid_from_username(g.db, session['username'])
+        sid = form['episode']
+        review_text = form['review_text']
+        rating = form['rating']
+
         flash('Review of {} added!'.format(episode_name))
 
     return select_show_episode()
