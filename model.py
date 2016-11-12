@@ -6,7 +6,7 @@ def get_connection(database_path):
     return sql.create_engine(database_path)  # connects to the database
 
 
-def check_password(self, username, password):
+def check_password(db, username, password):
     '''
     # Note: we can hash the passwords
 
@@ -17,9 +17,15 @@ def check_password(self, username, password):
 
     arguments: what the user entered at the login screen
     '''
+    # execute query for password of first user with matching username
+    response = db.execute("SELECT pwd FROM Users WHERE sn = '", username, "' LIMIT 1").fetchall()
+    
+    # Return False if query returned no results
+    if len(response) == 0:
+        return False
 
-
-    pass
+    # Return True if password is correct
+    return response[0] == password
 
 
 def get_all_shows(db):
