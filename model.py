@@ -18,14 +18,14 @@ def check_password(db, username, password):
     arguments: what the user entered at the login screen
     '''
     # execute query for password of first user with matching username
-    response = db.execute("SELECT pwd FROM Users WHERE sn = '", username, "' LIMIT 1").fetchall()
+    response = db.execute("SELECT pwd FROM Users WHERE sn = %s", username).fetchall()
     
     # Return False if query returned no results
     if len(response) == 0:
         return False
 
     # Return True if password is correct
-    return response[0] == password
+    return response[0][0] == password
 
 
 def get_all_shows(db):

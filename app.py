@@ -12,7 +12,6 @@ app.config['DATABASE'] = 'postgresql://gkj2106:g5d4w@104.196.175.120:5432/postgr
 app.debug = True
 
 
-
 @app.before_request
 def before_request():
     engine = get_connection(app.config['DATABASE'])
@@ -51,20 +50,17 @@ def attempt_register():
 @app.route('/attempt_login', methods=['GET', 'POST'])
 def attempt_login():
     form = request.form
+    username = form['username']
+    password = form['password']
 
-    user_is_valid = form['username'] == 'username'
-    pw_is_correct = form['password'] == 'password'
 
-    if user_is_valid and pw_is_correct:
+    if check_password(g.db, username, password):
         session['username'] = form['username']
         session['logged_in'] = True
+        flash('logged in as {}'.format(username))
 
     else:
-        # this is gonna change a ton
-        if not user_is_valid:
-            flash('not a registered username')
-        elif not pw_is_correct:
-            flash('password is incorrect')
+        flash('username and/or password is incorrect')
         return login()
     return select_show_episode()
 
