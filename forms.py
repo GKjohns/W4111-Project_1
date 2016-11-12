@@ -3,17 +3,17 @@ from wtforms import Form, StringField, PasswordField, SelectField,\
 from wtforms.widgets import TextArea
 
 class LoginForm(Form):
-    username = StringField('username', [validators.DataRequired()])
-    password = PasswordField('password', [validators.DataRequired()])
+    username = StringField('username', [validators.InputRequired()])
+    password = PasswordField('password', [validators.InputRequired()])
 
 class RegistrationForm(Form):
-    username = StringField('username', [validators.DataRequired()])
-    first_name = StringField('first_name', [validators.DataRequired()])
-    last_name = StringField('last_name', [validators.DataRequired()])
+    username = StringField('username', [validators.InputRequired()])
+    first_name = StringField('first_name', [validators.InputRequired()])
+    last_name = StringField('last_name', [validators.InputRequired()])
     password = PasswordField('password', [
-        validators.DataRequired(),
+        validators.InputRequired(),
         validators.EqualTo('confirm', message='Passwords must match')])
-    confirm = PasswordField('confirm')
+    confirm = PasswordField('confirm', [validators.InputRequired()])
 
 class AddShowReviewForm(Form):
     show = SelectField('show_name_sid')   # add choices in controller
