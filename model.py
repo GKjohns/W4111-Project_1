@@ -197,19 +197,66 @@ def get_uid_from_username(db, username):
 
     return cursor.fetchone()[0]
 
-def add_review_for_show(db, uid, sid, rating, review_text, timestamp):
+def add_review_for_show(db, uid, sid, rating, review_text):
     '''
-    returns True if review was successfully added
-    arguments: user's uid, show's sid, rating, the review's text
+        returns True if review was successfully added
+        arguments: user's uid, show's sid, rating, the review's text
+        '''
+    
+    # protect against sql injections
+    if "');" in review_text:
+        return False
+    
+    srid = db.execute("SELECT max(srid) FROM show_reviews").fetchall()[0][0] + 1
+    
+    query = "INSERT INTO show_reviews (srid,uid,sid,rating,review_text,ts) VALUES (" + str(srid) + "," + str(uid) + "," + str(sid) + "," + str(rating) + ",'" + review_text + "',CURRENT_TIMESTAMP)"
+    
+    print(query)
+    
+    
+    try:
+        db.execute(query)
+    except:
+        print("EXCEPTION WHEN ADDING SHOW REVIEW")
+        return False
+    
+    return True
+
+
+def add_review_for_eipsode(db, uid, eid, rating, review_text):
     '''
+        returns True if review was successfully added
+        arguments: user's uid, episode's sid, rating, the review's text
+        '''
+    
+    # protect against sql injections
+    if "');" in review_text:
+        return False
+    
+    srid = db.execute("SELECT max(erid) FROM episode_reviews").fetchall()[0][0] + 1
+    
+    try:
+        db.execute("INSERT INTO episode_reviews (srid,uid,eid,rating,review_text,ts) VALUES (" + erid + "," + uid + "," + eid + "," + rating + ",'" + review_text + "',CURRENT_TIMESTAMP)")
+    except:
+        print("EXCEPTION WHEN ADDING EPISODE REVIEW")
+        return False
+    
+    return True
 
-    pass
-
-
-def add_review_for_eipsode(db, uid, eid, rating, review_text, timestamp):
+def register_user(sn,pwd,first,last):
     '''
-    returns True if review was successfully added
-    arguments: user's uid, episode's sid, rating, the review's text
-    '''
-
-    pass
+        returns True if the screen name and password are valid (non-empty and unique)
+        arguments: sn screen name, pwd password, first first name, last last name
+        '''
+    
+    # protect against sql injections
+    if "');" in sn or "');" in pwd or "');" in first or "');" in last:
+        return False
+    
+    uid = db.execute("SELECT max(uid) FROM Users").fetchall()[0][0] + 1
+    
+    try:
+        db.execute("INSERT INTO Users (uid,sn,pwd,firstName,lastName) VALUES (" + uid + "," + sn + "," + pwd + "," + first + "," + last + ")")
+    except:
+        print("EXCEPTION WHEN ADDING USER")
+        return False
