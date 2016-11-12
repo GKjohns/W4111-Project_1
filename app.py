@@ -3,6 +3,7 @@ from flask import Flask, request, render_template, flash,\
                   session, redirect, url_for, g
 from forms import LoginForm, RegistrationForm,\
                   AddShowReviewForm, AddEpisodeReviewForm
+import datetime
 from model import *
 import json
 import sqlalchemy
@@ -90,7 +91,6 @@ def add_episode_review():
 @app.route('/process_review', methods=['POST', 'GET'])
 def process_review():
     form = request.form
-    print session
 
     if form.get('show', False):
         show_name = get_name_from_sid(g.db, form['show'])
@@ -98,10 +98,11 @@ def process_review():
         sid = form['show']
         review_text = form['review_text']
         rating = form['rating']
+        review_time = datetime.datetime.now()
 
-        print show_name, uid, sid, review_text, rating
+        print show_name, uid, sid, review_text, rating, review_time
 
-        add_review_for_show(g.db, uid, sid, review_text, rating)
+        add_review_for_show(g.db, uid, sid, rating, review_text, review_time)
         flash('Review of {} added!'.format(show_name))
     if form.get('episode', False):
         episode_name = get_name_from_eid(g.db, form['episode'])
@@ -109,6 +110,7 @@ def process_review():
         sid = form['episode']
         review_text = form['review_text']
         rating = form['rating']
+        review_time = datetime.datetime.now()
 
         flash('Review of {} added!'.format(episode_name))
 

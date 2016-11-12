@@ -197,7 +197,7 @@ def get_uid_from_username(db, username):
 
     return cursor.fetchone()[0]
 
-def add_review_for_show(db, uid, sid, rating, review_text):
+def add_review_for_show(db, uid, sid, rating, review_text, timestamp):
     '''
     returns True if review was successfully added
     arguments: user's uid, show's sid, rating, the review's text
