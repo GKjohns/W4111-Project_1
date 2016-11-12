@@ -1,0 +1,14 @@
+{% extends "_base.html" %}
+{% block content %}
+  <div class="review_form">
+    <form action="/process_review" method="POST">
+      <span>Show: </span>{{ form.episode }}
+      <br><br>
+      <span>Tell us what you thought</span>{{ form.review_text }}
+      <br><br>
+      <span>Score (1 - 5): </span>{{ form.rating }}
+      <br><br>
+      <button type="submit" name="button">Submit Review</button>
+    </form>
+  </div>
+{% endblock %}

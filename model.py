@@ -41,6 +41,58 @@ def get_all_shows(db):
 
     return cursor.fetchall()
 
+def get_all_episodes(db):
+
+    query = '''
+        SELECT
+          s.name,
+          e.name,
+          e.season,
+          e.episodenumber,
+          e.eid
+        FROM
+          episodes e
+        JOIN
+          shows s
+        ON
+          e.sid = s.sid;
+    '''
+    cursor = db.execute(query)
+
+    return cursor.fetchall()
+
+def get_name_from_sid(db, sid):
+
+    query = '''
+        SELECT
+          name
+        FROM
+          shows
+        WHERE
+          sid={}
+    '''.format(sid)
+    cursor = db.execute(query)
+
+    return cursor.fetchone()
+
+def get_name_from_eid(db, eid):
+
+    if not eid.isdigit():
+        return False
+
+    query = '''
+        SELECT
+          name
+        FROM
+          episodes
+        WHERE
+          eid={}
+    '''.format(eid)
+    cursor = db.execute(query)
+
+    return cursor.fetchone()
+
+
 
 def get_episodes_from_sids(db):
     '''

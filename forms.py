@@ -20,3 +20,9 @@ class AddShowReviewForm(Form):
     review_text = TextAreaField('review_text',
         render_kw={"rows": 15, "cols": 70})  #widgets=TextArea(row=70, cols=11))
     rating = SelectField('rating', choices=[(i, i) for i in xrange(1,6)])
+
+class AddEpisodeReviewForm(Form):
+    episode = SelectField('episode_name_sid')   # add choices in controller
+    review_text = TextAreaField('review_text',
+        render_kw={"rows": 15, "cols": 70})  #widgets=TextArea(row=70, cols=11))
+    rating = SelectField('rating', choices=[(i, i) for i in xrange(1,6)])

@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, request, render_template, flash,\
                   session, redirect, url_for, g
-from forms import LoginForm, RegistrationForm, AddShowReviewForm
+from forms import LoginForm, RegistrationForm,\
+                  AddShowReviewForm, AddEpisodeReviewForm
 from model import *
 import json
 import sqlalchemy
@@ -76,14 +77,29 @@ def add_show_review():
     form.show.choices = show_choices
     return render_template('add_show_review.html', form=form)
 
+@app.route('/add_episode_review', methods=['POST', 'GET'])
+def add_episode_review():
+    form = AddEpisodeReviewForm()
+    rows = get_all_episodes(g.db)
+    episode_choices = [( row[4], '{}: {} s.{} ep. {}'.format(*row[:4]))
+                       for row in rows]
+    form.episode.choices = episode_choices
+    return render_template('add_episode_review.html', form=form)
+
+
 @app.route('/process_review', methods=['POST', 'GET'])
 def process_review():
     form = request.form
+    print form
 
     # Use the model to pull data from the database
 
-
-    flash('Review of {} added!'.format(form['show']))
+    if form.get('show', False):
+        show_name = get_name_from_sid(g.db, form['show'])[0]
+        flash('Review of {} added!'.format(show_name))
+    if form.get('episode', False):
+        episode_name = get_name_from_eid(g.db, form['episode'])[0]
+        flash('Review of {} added!'.format(episode_name))
 
     return select_show_episode()
 
