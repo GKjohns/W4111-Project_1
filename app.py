@@ -42,9 +42,15 @@ def attempt_register():
     # process all the data
     if RegistrationForm(form).validate():
         print form
-        register_user(g.db, form['username'], form['password'], form['first_name'], form['last_name'])
-        flash('Successfully registered!')
-        return login()
+        response = register_user(g.db, form['username'], form['password'],
+                     form['first_name'], form['last_name'])
+
+        if response:
+            flash('Successfully registered!')
+            return login()
+        else:
+            flash('Someone has already chosen that username!')
+            return registration_page()
     else:
         flash('There was a problem with your registration')
         return registration_page()
