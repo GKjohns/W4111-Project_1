@@ -242,17 +242,23 @@ def add_review_for_episode(db, uid, eid, rating, review_text):
     db.execute(query, {'erid': erid, 'uid': uid, 'eid': eid,
                        'rating': rating, 'review_text': review_text})
     return True
+
+
 def register_user(sn,pwd,first,last):
     '''
         returns True if the screen name and password are valid (non-empty and unique)
         arguments: sn screen name, pwd password, first first name, last last name
-        '''
+    '''
 
     # protect against sql injections
     if "');" in sn or "');" in pwd or "');" in first or "');" in last:
         return False
 
     uid = db.execute("SELECT max(uid) FROM Users").fetchall()[0][0] + 1
+
+    if db.execute("SELECT count(*) FROM Users WHERE sn = %s",sn).fetchall()[0][0] > 0:
+        print("Someone already has that screen name!")
+        return False
 
     try:
         db.execute("INSERT INTO Users (uid,sn,pwd,firstName,lastName) VALUES (" + uid + "," + sn + "," + pwd + "," + first + "," + last + ")")
