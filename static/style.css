@@ -43,3 +43,7 @@ a.add_review_btn {
   text-decoration: none;
   color: #AAA;
 }
+
+a {
+  color: black;
+}

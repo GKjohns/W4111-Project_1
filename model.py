@@ -39,10 +39,10 @@ def get_all_shows(db):
     '''
     cursor = db.execute(query)
 
-    print cursor.fetchall()
+    return cursor.fetchall()
 
 
-def get_episodes_from_sid(db):
+def get_episodes_from_sids(db):
     '''
     returns a list of tuples in the following format
 
@@ -50,18 +50,42 @@ def get_episodes_from_sid(db):
 
     no arguments
     '''
+    query = '''
+        SELECT sid, eid, name, season, episodeNumber
+        FROM episodes
+    '''
+    cursor = db.execute(query)
 
-    pass
+    return cursor.fetchall()
 
 
-def get_reviews_for_show(self, sid):
+def get_reviews_for_show(db, sid):
     '''
     returns a list of reviews
 
     arguments: a show's sid
     '''
 
-    pass
+    query = '''
+        SELECT
+          u.firstname AS user_first_name,
+          u.lastname AS user_last_name,
+          show_rev.ts AS review_time,
+          show_rev.review_text AS review_text,
+          show_rev.rating AS review_rating
+
+        FROM
+          (SELECT a.name, b.review_text, b.rating, b.ts, b.uid
+           FROM shows a JOIN show_reviews b
+           ON a.sid = b.sid AND b.sid = {}) show_rev
+        JOIN
+          users u
+        ON
+          show_rev.uid = u.uid;
+    '''.format(sid)
+    cursor = db.execute(query)
+
+    return cursor.fetchall()
 
 
 def get_episodes_from_sid(self, eid):

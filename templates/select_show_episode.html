@@ -5,11 +5,11 @@
   <a href="#" class="add_review_btn"><span>Add an episode review</span></a>
 </div>
 <h2>Select a show or episode</h2>
-  <div class="shows_list">
+  <div>
   {% for show in shows %}
-    <h3>{{ show.name }}</h3>
+    <a href="{{ url_for('show_reviews', sid=show['sid'], show_name=show['name']) }}" class="show_ep_name"><h3>{{ show['name'] }}</h3></a>
     {% for episode in sid_to_episodes[show.sid] %}
-      <p>{{ episode.name }}</p>
+      <a href="#" class="show_ep_name"><em>{{ episode['name'] }}</em></a>
     {% endfor %}
   {% endfor %}
   </div>

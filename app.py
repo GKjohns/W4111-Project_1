@@ -47,7 +47,7 @@ def attempt_register():
         return registration_page()
 
 
-@app.route('/attempt_login', methods=['POST'])
+@app.route('/attempt_login', methods=['GET', 'POST'])
 def attempt_login():
     form = request.form
 
@@ -85,42 +85,47 @@ def process_review():
 
 
 
-@app.route('/select_show_episode', methods=['POST'])
+@app.route('/select_show_episode', methods=['GET', 'POST'])
 def select_show_episode():
 
+    # transform raw rows into lists of dicts
+    shows = [{'name': row[0], 'sid': row[1]} for row in get_all_shows(g.db)]
+    raw_rows = get_episodes_from_sids(g.db)
 
-    ######
+    sid_to_episodes = {}
+    for row in raw_rows:
+        if row[0] not in sid_to_episodes:
+            sid_to_episodes[row[0]] = []
+        sid_to_episodes[row[0]].append({
+            'eid': row[1],
+            'name': row[2],
+            'season': row[3],
+            'episode_number': row[4]
+        })
 
-    # All this stuff will change
-
-    ######
-
-
-
-    fake_shows = [{'name':'Family Matters',
-                       'sid': 0},
-                  {'name': 'Boy Meets world',
-                   'sid': 1},
-                  {'name': 'Power Rangers',
-                   'sid': 2}]
-
-
-    sid_to_episodes = {
-        0: [{'name': 'Something Happy',
-             'sid': 11},
-            {'name': 'A Show',
-             'sid': 3}],
-        1: [{'name': 'Person Dies',
-            'sid': 54},
-            {'name': 'Love Blooms',
-             'sid': 20}],
-        2: [{'name': 'Accident Happens',
-             'sid': 3}]
-    }
-
-    return render_template('select_show_episode.html', shows=fake_shows,
+    return render_template('select_show_episode.html', shows=shows,
                            sid_to_episodes=sid_to_episodes)
 
+@app.route('/show_reviews', methods=['GET', 'POST'])
+def show_reviews():
+    sid = request.args['sid']
+    show_name = request.args['show_name']
+
+    # prevent injection
+    if not sid.isdigit():
+        flash('error retrieving data, please try again')
+        select_show_episode()
+
+    review_rows = get_reviews_for_show(g.db, sid)
+    print review_rows
+    reviews = [{
+        'user_name': '{} {}'.format(row[0], row[1]),
+        'review_time': row[2].strftime('%B %d, %Y'),
+        'text': row[3],
+        'rating': row[4],
+    } for row in review_rows]
+    print reviews
+    return render_template('show_reviews.html', reviews=reviews)
 
 if __name__ == '__main__':
     app.run()
