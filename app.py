@@ -39,9 +39,10 @@ def registration_page():
 @app.route('/attempt_register', methods=['POST'])
 def attempt_register():
     form = request.form
-    form_is_good = True
     # process all the data
-    if form_is_good:
+    if RegistrationForm(form).validate():
+        print form
+        register_user(g.db, form['username'], form['password'], form['first_name'], form['last_name'])
         flash('Successfully registered!')
         return login()
     else:

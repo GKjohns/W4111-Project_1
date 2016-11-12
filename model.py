@@ -242,7 +242,7 @@ def add_review_for_episode(db, uid, eid, rating, review_text):
     db.execute(query, {'erid': erid, 'uid': uid, 'eid': eid,
                        'rating': rating, 'review_text': review_text})
     return True
-def register_user(sn,pwd,first,last):
+def register_user(db, sn, pwd, first, last):
     '''
         returns True if the screen name and password are valid (non-empty and unique)
         arguments: sn screen name, pwd password, first first name, last last name
@@ -254,8 +254,15 @@ def register_user(sn,pwd,first,last):
 
     uid = db.execute("SELECT max(uid) FROM Users").fetchall()[0][0] + 1
 
-    try:
-        db.execute("INSERT INTO Users (uid,sn,pwd,firstName,lastName) VALUES (" + uid + "," + sn + "," + pwd + "," + first + "," + last + ")")
-    except:
-        print("EXCEPTION WHEN ADDING USER")
-        return False
+    query = sql.sql.text("""
+        INSERT INTO
+            users (uid,sn,pwd,firstName,lastName)
+        VALUES
+            (:uid, :sn, :pw, :firstName, :lastName)
+    """)
+    db.execute(query, {'uid': uid, 'sn': sn, 'pw': pwd,
+                       'firstName': first, 'lastName': last})
+    return True
+    # except:
+    #     print("EXCEPTION WHEN ADDING USER")
+    #     return False
