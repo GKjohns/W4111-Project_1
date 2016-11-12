@@ -206,7 +206,7 @@ def add_review_for_show(db, uid, sid, rating, review_text, timestamp):
     pass
 
 
-def add_review_for_eipsode(db, uid, eid, rating, review_text):
+def add_review_for_eipsode(db, uid, eid, rating, review_text, timestamp):
     '''
     returns True if review was successfully added
     arguments: user's uid, episode's sid, rating, the review's text

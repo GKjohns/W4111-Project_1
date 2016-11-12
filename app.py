@@ -92,26 +92,23 @@ def add_episode_review():
 def process_review():
     form = request.form
 
+    uid = get_uid_from_username(g.db, session['username'])
+    review_text = form['review_text']
+    rating = form['rating']
+    review_time = datetime.datetime.now()
+
     if form.get('show', False):
         show_name = get_name_from_sid(g.db, form['show'])
-        uid = get_uid_from_username(g.db, session['username'])
         sid = form['show']
-        review_text = form['review_text']
-        rating = form['rating']
-        review_time = datetime.datetime.now()
-
-        print show_name, uid, sid, review_text, rating, review_time
 
         add_review_for_show(g.db, uid, sid, rating, review_text, review_time)
         flash('Review of {} added!'.format(show_name))
+
     if form.get('episode', False):
         episode_name = get_name_from_eid(g.db, form['episode'])
-        uid = get_uid_from_username(g.db, session['username'])
-        sid = form['episode']
-        review_text = form['review_text']
-        rating = form['rating']
-        review_time = datetime.datetime.now()
-
+        eid = form['episode']
+        print uid, review_text, rating, review_time, episode_name, eid
+        add_review_for_eipsode(g.db, uid, eid, rating, review_text, review_time)
         flash('Review of {} added!'.format(episode_name))
 
     return select_show_episode()
