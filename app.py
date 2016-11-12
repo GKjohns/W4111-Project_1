@@ -1,17 +1,32 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, request, render_template, flash,\
-                  session, redirect, url_for
+                  session, redirect, url_for, g
 from forms import LoginForm, RegistrationForm, AddShowReviewForm
-
+from model import *
+import sqlalchemy
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'comsw4111'
+app.config['DATABASE'] = 'postgresql://gkj2106:g5d4w@104.196.175.120:5432/postgres'
 app.debug = True
+
+
+
+@app.before_request
+def before_request():
+    engine = get_connection(app.config['DATABASE'])
+    g.db = engine.connect()
+
+@app.teardown_request
+def teardown_request(exception):
+    db = getattr(g, 'db', None)
+    if db is not None:
+        db.close()
+
 
 @app.route('/')
 def login():
     return render_template('login.html', form=LoginForm())
-
 
 @app.route('/registration_page', methods=['GET', 'POST'])
 def registration_page():
