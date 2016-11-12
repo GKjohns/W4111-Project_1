@@ -15,9 +15,6 @@ class RegistrationForm(Form):
         validators.EqualTo('confirm', message='Passwords must match')])
     confirm = PasswordField('confirm')
 
-dummy_shows = ['The Fairly Odd Parents', 'Double Dare', 'Boy Meets World']
-dummy_shows = [(x, x) for x in dummy_shows]
-
 class AddShowReviewForm(Form):
     show = SelectField('show_name_sid', choices=dummy_shows)   # add choices in controller
     review_text = TextAreaField('review_text',
