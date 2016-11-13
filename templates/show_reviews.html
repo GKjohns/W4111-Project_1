@@ -2,7 +2,24 @@
 {% block content %}
   <div class="reviews_container">
   <h2>{{ show_name }}</h2>
-  <br>
+  <h2>Contributors</h2>
+  {% if contributors|length == 0 %}
+    <em>No contributors</em>
+  {% else %}
+    <table>
+      <tr>
+        <th>Contributor</th>
+        <th>Role</th>
+      </tr>
+      {% for contributor in contributors %}
+        <tr>
+          <td>{{ contributor['name'] }}</td>
+          <td>{{ contributor['role'] }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  {% endif %}
+  <h2>Reviews</h2>
   {% if reviews|length == 0 %}
     <em>No reviews yet</em>
   {% endif %}

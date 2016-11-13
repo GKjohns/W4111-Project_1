@@ -1,6 +1,7 @@
 {% extends "_base.html" %}
 {% block content %}
   <div class="reviews_container">
+  {{ eid }}
   {% for review in reviews %}
     <h3>{{ review['show_name'] }}: Season {{ review['season'] }}, Ep. {{ review['episode_number']}}</h3>
     <h4>{{ review['episode_name'] }}</h4>

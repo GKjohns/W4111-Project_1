@@ -269,3 +269,22 @@ def register_user(db, sn, pwd, first, last):
     db.execute(query, {'uid': uid, 'sn': sn, 'pw': pwd,
                        'firstName': first, 'lastName': last})
     return True
+
+def get_contributors_from_sid(db, sid):
+    query = sql.sql.text('''
+        SELECT
+          show_title.title, contrs.name
+        FROM
+          (SELECT a.title AS title, b.name AS name, a.cid AS cid
+           FROM works_shows a JOIN shows b
+           ON (a.sid = b.sid AND b.sid=:sid)) show_title
+        JOIN
+          contributors contrs
+        ON show_title.cid = contrs.cid;
+    ''')
+    cursor = db.execute(query, {'sid': sid})
+
+    return cursor.fetchall()
+
+def get_contributors_from_eid():
+    pass

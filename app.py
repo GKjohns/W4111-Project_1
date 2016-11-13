@@ -18,12 +18,13 @@ app.debug = True
 def before_request():
     engine = get_connection(app.config['DATABASE'])
     g.db = engine.connect()
+    print 'connected to database'
 
 @app.teardown_request
 def teardown_request(exception):
-    db = getattr(g, 'db', None)
-    if db is not None:
-        db.close()
+    if hasattr(g, 'db'):
+        g.db.close()
+        print 'disconnected from database'
 
 
 @app.route('/')
@@ -41,7 +42,6 @@ def attempt_register():
     form = request.form
     # process all the data
     if RegistrationForm(form).validate():
-        print form
         response = register_user(g.db, form['username'], form['password'],
                      form['first_name'], form['last_name'])
 
@@ -113,7 +113,6 @@ def process_review():
     if form.get('episode', False):
         episode_name = get_name_from_eid(g.db, form['episode'])
         eid = form['episode']
-        print uid, review_text, rating, episode_name, eid
         add_review_for_episode(g.db, uid, eid, rating, review_text)
         flash('Review of {} added!'.format(episode_name))
 
@@ -152,17 +151,19 @@ def show_reviews():
         flash('error retrieving data, please try again')
         select_show_episode()
 
+    contrib_rows = get_contributors_from_sid(g.db, sid)
+    contributors = [{'name': row[0], 'role': row[1]} for row in contrib_rows]
+    print contributors
+
     review_rows = get_reviews_for_show(g.db, sid)
-    print review_rows
     reviews = [{
         'user_name': '{} {}'.format(row[0], row[1]),
         'review_time': row[2].strftime('%B %d, %Y'),
         'text': row[3],
         'rating': row[4],
     } for row in review_rows]
-    print reviews
-    return render_template('show_reviews.html',
-                           reviews=reviews, show_name=show_name)
+    return render_template('show_reviews.html', reviews=reviews,
+                           show_name=show_name, contributors=contributors)
 
 @app.route('/episode_reviews', methods=['GET', 'POST'])
 def episode_reviews():
