@@ -1,13 +1,30 @@
 {% extends "_base.html" %}
 {% block content %}
   <div class="reviews_container">
-  {{ eid }}
+    <h2>Contributors</h2>
+    {% if contributors|length == 0 %}
+      <em>No contributors</em>
+    {% else %}
+      <table>
+        <tr>
+          <th>Contributor</th>
+          <th>Role</th>
+        </tr>
+        {% for contributor in contributors %}
+          <tr>
+            <td>{{ contributor['name'] }}</td>
+            <td>{{ contributor['role'] }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% endif %}
+    <h2>Reviews</h2>
   {% for review in reviews %}
     <h3>{{ review['show_name'] }}: Season {{ review['season'] }}, Ep. {{ review['episode_number']}}</h3>
     <h4>{{ review['episode_name'] }}</h4>
     <p>{{ review['user_name'] }} @ {{ review['review_time']}}</p>
     <p>{{ review['text'] }}</p>
-    <p>{{ review['rating']}}</p>
+    <p>Rating: {{ review['rating']}}</p>
   {% endfor %}
   </div>
 

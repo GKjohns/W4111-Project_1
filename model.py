@@ -51,11 +51,7 @@ def get_all_episodes(db):
 
     query = '''
         SELECT
-          s.name,
-          e.name,
-          e.season,
-          e.episodenumber,
-          e.eid
+          s.name, e.name, e.season, e.episodenumber, e.eid
         FROM
           episodes e
         JOIN
@@ -69,15 +65,15 @@ def get_all_episodes(db):
 
 def get_name_from_sid(db, sid):
 
-    query = '''
+    query = sql.sql.text('''
         SELECT
           name
         FROM
           shows
         WHERE
-          sid={}
-    '''.format(sid)
-    cursor = db.execute(query)
+          sid=:sid
+    ''')
+    cursor = db.execute(query, {'sid': sid})
 
     return cursor.fetchone()[0]
 
@@ -86,15 +82,15 @@ def get_name_from_eid(db, eid):
     if not eid.isdigit():
         return False
 
-    query = '''
+    query = sql.sql.text('''
         SELECT
           name
         FROM
           episodes
         WHERE
-          eid={}
-    '''.format(eid)
-    cursor = db.execute(query)
+          eid=:eid
+    ''')
+    cursor = db.execute(query, {'eid': eid})
 
     return cursor.fetchone()[0]
 
@@ -127,7 +123,7 @@ def get_reviews_for_show(db, sid):
         [(user_last_name, user_last_name, review_time, review_text, review_rating)]
     '''
 
-    query = '''
+    query = sql.sql.text('''
         SELECT
           u.firstname AS user_first_name,
           u.lastname AS user_last_name,
@@ -138,13 +134,13 @@ def get_reviews_for_show(db, sid):
         FROM
           (SELECT a.name, b.review_text, b.rating, b.ts, b.uid
            FROM shows a JOIN show_reviews b
-           ON a.sid = b.sid AND b.sid = {}) show_rev
+           ON a.sid = b.sid AND b.sid=:sid) show_rev
         JOIN
           users u
         ON
           show_rev.uid = u.uid;
-    '''.format(sid)
-    cursor = db.execute(query)
+    ''')
+    cursor = db.execute(query, {'sid': sid})
 
     return cursor.fetchall()
 
@@ -184,28 +180,24 @@ def get_reviews_for_episode(db, eid):
 
 def get_uid_from_username(db, username):
 
-    query = """
+    query = sql.sql.text("""
         SELECT
           uid
         FROM
           users
         WHERE
-          sn='{}'
-    """.format(username)
+          sn=:username
+    """)
 
-    cursor = db.execute(query)
+    cursor = db.execute(query, {'username': username})
 
     return cursor.fetchone()[0]
 
 def add_review_for_show(db, uid, sid, rating, review_text):
     '''
-        returns True if review was successfully added
-        arguments: user's uid, show's sid, rating, the review's text
-        '''
-
-    # protect against sql injections
-    if "');" in review_text:
-        return False
+    returns True if review was successfully added
+    arguments: user's uid, show's sid, rating, the review's text
+    '''
 
     srid = db.execute("SELECT max(srid) FROM show_reviews").fetchall()[0][0] + 1
     review_text = review_text.replace("'", "\'")
@@ -215,7 +207,6 @@ def add_review_for_show(db, uid, sid, rating, review_text):
         VALUES
             (:srid, :uid, :sid, :rating, :review_text, CURRENT_TIMESTAMP)
     """)
-    print(query)
     db.execute(query, {'srid': srid, 'uid': uid, 'sid': sid,
                        'rating': rating, 'review_text': review_text})
     return True
@@ -223,12 +214,9 @@ def add_review_for_show(db, uid, sid, rating, review_text):
 
 def add_review_for_episode(db, uid, eid, rating, review_text):
     '''
-        returns True if review was successfully added
-        arguments: user's uid, episode's sid, rating, the review's text
-        '''
-    # protect against sql injections
-    if "');" in review_text:
-        return False
+    returns True if review was successfully added
+    arguments: user's uid, episode's sid, rating, the review's text
+    '''
 
     erid = db.execute("SELECT max(erid) FROM episode_reviews").fetchall()[0][0] + 1
     review_text = review_text.replace("'", "\'")
@@ -238,7 +226,6 @@ def add_review_for_episode(db, uid, eid, rating, review_text):
         VALUES
             (:erid, :uid, :eid, :rating, :review_text, CURRENT_TIMESTAMP)
     """)
-    print(query)
     db.execute(query, {'erid': erid, 'uid': uid, 'eid': eid,
                        'rating': rating, 'review_text': review_text})
     return True
@@ -249,10 +236,6 @@ def register_user(db, sn, pwd, first, last):
         returns True if the screen name and password are valid (non-empty and unique)
         arguments: sn screen name, pwd password, first first name, last last name
     '''
-
-    # protect against sql injections
-    if "');" in sn or "');" in pwd or "');" in first or "');" in last:
-        return False
 
     if db.execute("SELECT count(*) FROM Users WHERE sn = %s",sn).fetchall()[0][0] > 0:
         print("Someone already has that screen name!")
@@ -286,5 +269,18 @@ def get_contributors_from_sid(db, sid):
 
     return cursor.fetchall()
 
-def get_contributors_from_eid():
-    pass
+def get_contributors_from_eid(db, eid):
+    query = sql.sql.text('''
+        SELECT
+          episode_title.title, contrs.name
+        FROM
+          (SELECT a.title AS title, b.name AS name, a.cid AS cid
+           FROM works_episodes a JOIN episodes b
+           ON (a.eid = b.eid AND b.eid=:eid)) episode_title
+        JOIN
+          contributors contrs
+        ON episode_title.cid = contrs.cid;
+    ''')
+    cursor = db.execute(query, {'eid': eid})
+
+    return cursor.fetchall()

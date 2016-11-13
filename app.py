@@ -152,8 +152,7 @@ def show_reviews():
         select_show_episode()
 
     contrib_rows = get_contributors_from_sid(g.db, sid)
-    contributors = [{'name': row[0], 'role': row[1]} for row in contrib_rows]
-    print contributors
+    contributors = [{'role': row[0], 'name': row[1]} for row in contrib_rows]
 
     review_rows = get_reviews_for_show(g.db, sid)
     reviews = [{
@@ -170,11 +169,15 @@ def episode_reviews():
 
     eid = request.args['eid']
     show_name = request.args['show_name']
+    print show_name
 
     # prevent injection
     if not eid.isdigit():
         flash('error retrieving data, please try again')
         select_show_episode()
+
+    contrib_rows = get_contributors_from_eid(g.db, eid)
+    contributors = [{'role': row[0], 'name': row[1]} for row in contrib_rows]
 
     reviews = get_reviews_for_episode(g.db, eid)
     reviews_formatted = [{
@@ -188,7 +191,7 @@ def episode_reviews():
         'rating': row[7]} for row in reviews]   # an ugly, but useful list comprehension
     return render_template('episode_reviews.html',
                             reviews=reviews_formatted,
-                            show_name=show_name)
+                            contributors=contributors)
 
 if __name__ == '__main__':
     app.run()
