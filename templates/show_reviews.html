@@ -27,10 +27,12 @@
     <em>No reviews yet</em>
   {% endif %}
   {% for review in reviews %}
+    <div style="border-style:outset">
     <h3>{{ review['user_name'] }} @ {{ review['review_time'] }}</h3>
     <p>{{ review['text'] }}</p>
     <p>rating: {{ review['rating'] }}</p>
     <br><br>
+    </div>
   {% endfor %}
   </center>
   </div>
