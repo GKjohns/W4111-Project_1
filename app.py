@@ -186,7 +186,6 @@ def episode_reviews():
         'rating': row[4]} for row in reviews]   # an ugly, but useful list comprehension
 
     episode_info = get_episode_from_eid(g.db, eid)
-    print episode_info
     episode_info = {
         'name': episode_info[0],
         'season': episode_info[1],
