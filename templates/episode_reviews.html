@@ -1,6 +1,7 @@
 {% extends "_base.html" %}
 {% block content %}
   <div class="reviews_container">
+      <center>
     <h2>Contributors</h2>
     {% if contributors|length == 0 %}
       <em>No contributors</em>
@@ -20,12 +21,15 @@
     {% endif %}
     <h2>Reviews</h2>
   {% for review in reviews %}
+    <div style="border-style:outset">
     <h3>{{ review['show_name'] }}: Season {{ review['season'] }}, Ep. {{ review['episode_number']}}</h3>
     <h4>{{ review['episode_name'] }}</h4>
     <p>{{ review['user_name'] }} @ {{ review['review_time']}}</p>
     <p>{{ review['text'] }}</p>
     <p>Rating: {{ review['rating']}}</p>
+    </div>
   {% endfor %}
+  </center>
   </div>
 
 
