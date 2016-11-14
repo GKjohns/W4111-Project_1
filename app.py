@@ -169,7 +169,6 @@ def episode_reviews():
 
     eid = request.args['eid']
     show_name = request.args['show_name']
-    print show_name
 
     # prevent injection
     if not eid.isdigit():
