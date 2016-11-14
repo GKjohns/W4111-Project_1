@@ -6,11 +6,15 @@
 </div>
 <h2>Select a show or episode</h2>
   <div>
+      <center>
+      <table>
   {% for show in shows %}
-    <a href="{{ url_for('show_reviews', sid=show['sid'], show_name=show['name']) }}" class="show_ep_name"><h3>{{ show['name'] }}</h3></a>
+    <tr><th><a href="{{ url_for('show_reviews', sid=show['sid'], show_name=show['name']) }}" class="show_ep_name"><h3>{{ show['name'] }}</h3></a></th></tr>
     {% for episode in sid_to_episodes[show.sid] %}
-      <a href="{{ url_for('episode_reviews' , eid=episode['eid'], sid=show['sid'], show_name = show['name']) }}" class="show_ep_name"><em>{{ episode['name'] }}</em></a>
+      <tr><td><a href="{{ url_for('episode_reviews' , eid=episode['eid'], sid=show['sid'], show_name = show['name']) }}" class="show_ep_name"><em>{{ episode['name'] }}</em></a></td></tr>
     {% endfor %}
   {% endfor %}
+  </table>
+      </center>
   </div>
 {% endblock %}
