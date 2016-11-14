@@ -191,7 +191,8 @@ def episode_reviews():
         'rating': row[7]} for row in reviews]   # an ugly, but useful list comprehension
     return render_template('episode_reviews.html',
                             reviews=reviews_formatted,
-                            contributors=contributors)
+                            contributors=contributors,
+                            show_name=show_name)
 
 if __name__ == "__main__":
     import click
