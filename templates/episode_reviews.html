@@ -2,6 +2,7 @@
 {% block content %}
   <div class="reviews_container">
     <h2>{{ show_name }}</h2>
+    <h3>Season {{ episode_info['season'] }}, Ep. {{ episode_info['episode_number']}}: {{ episode_info['name'] }}</h3>
       <center>
     <h2>Contributors</h2>
     {% if contributors|length == 0 %}
@@ -23,7 +24,7 @@
     <h2>Reviews</h2>
   {% for review in reviews %}
     <div style="border-style:outset">
-    <h3>Season {{ review['season'] }}, Ep. {{ review['episode_number']}}: {{ review['episode_name'] }}</h3>
+
     <p>{{ review['user_name'] }} @ {{ review['review_time']}}</p>
     <p>{{ review['text'] }}</p>
     <p>Rating: {{ review['rating']}}</p>

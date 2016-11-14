@@ -180,18 +180,24 @@ def episode_reviews():
 
     reviews = get_reviews_for_episode(g.db, eid)
     reviews_formatted = [{
-        'show_name': show_name,
-        'episode_name': row[0],
-        'season': row[1],
-        'episode_number': row[2],
-        'user_name': '{} {}'.format(row[3], row[4]),
-        'review_time': row[5].strftime('%B %d, %Y'),
-        'text': row[6],
-        'rating': row[7]} for row in reviews]   # an ugly, but useful list comprehension
+        'user_name': '{} {}'.format(row[0], row[1]),
+        'review_time': row[2].strftime('%B %d, %Y'),
+        'text': row[3],
+        'rating': row[4]} for row in reviews]   # an ugly, but useful list comprehension
+
+    episode_info = get_episode_from_eid(g.db, eid)
+    print episode_info
+    episode_info = {
+        'name': episode_info[0],
+        'season': episode_info[1],
+        'episode_number': episode_info[2]
+    }
+
     return render_template('episode_reviews.html',
                             reviews=reviews_formatted,
                             contributors=contributors,
-                            show_name=show_name)
+                            show_name=show_name,
+                            episode_info=episode_info)
 
 if __name__ == "__main__":
     import click

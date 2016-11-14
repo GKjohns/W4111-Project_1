@@ -153,28 +153,22 @@ def get_reviews_for_episode(db, eid):
     arguments: an episode's eid
     '''
 
-    query = '''
+    query = sql.sql.text('''
         SELECT
-          episode_rev.name AS episode_name,
-          episode_rev.season AS season,
-          episode_rev.episodenumber AS episode_number,
           u.firstname AS user_first_name,
           u.lastname AS user_last_name,
-          episode_rev.ts AS review_time,
-          episode_rev.review_text AS review_text,
-          episode_rev.rating AS review_rating
+          e.ts AS review_time,
+          e.review_text AS review_text,
+          e.rating AS review_rating
 
         FROM
-          (SELECT a.name, a.season, a.episodenumber, b.review_text,
-                  b.rating, b.ts, b.uid
-           FROM episodes a JOIN episode_reviews b
-           ON a.eid = b.eid AND b.eid = {}) episode_rev
+          episode_reviews e
         JOIN
           users u
         ON
-          episode_rev.uid = u.uid;
-    '''.format(eid)
-    cursor = db.execute(query)
+          e.uid = u.uid AND e.eid=:eid;
+    ''')
+    cursor = db.execute(query, {'eid': eid})
 
     return cursor.fetchall()
 
@@ -268,6 +262,21 @@ def get_contributors_from_sid(db, sid):
     cursor = db.execute(query, {'sid': sid})
 
     return cursor.fetchall()
+
+def get_episode_from_eid(db, eid):
+
+    query = sql.sql.text('''
+        SELECT
+          name, season, episodenumber
+        FROM
+          episodes
+        WHERE
+          eid=:eid
+
+    ''')
+    cursor = db.execute(query, {'eid': eid})
+
+    return cursor.fetchone()
 
 def get_contributors_from_eid(db, eid):
     query = sql.sql.text('''
