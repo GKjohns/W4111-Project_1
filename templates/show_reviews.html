@@ -2,7 +2,9 @@
 {% block content %}
   <div class="reviews_container">
   <h2>{{ show_name }}</h2>
+  <hr/>
   <h2>Contributors</h2>
+  <center>
   {% if contributors|length == 0 %}
     <em>No contributors</em>
   {% else %}
@@ -19,6 +21,7 @@
       {% endfor %}
     </table>
   {% endif %}
+  <hr/>
   <h2>Reviews</h2>
   {% if reviews|length == 0 %}
     <em>No reviews yet</em>
@@ -29,5 +32,6 @@
     <p>rating: {{ review['rating'] }}</p>
     <br><br>
   {% endfor %}
+  </center>
   </div>
 {% endblock %}
