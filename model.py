@@ -232,7 +232,17 @@ def register_user(db, sn, pwd, first, last):
         arguments: sn screen name, pwd password, first first name, last last name
     '''
 
-    if db.execute("SELECT count(*) FROM Users WHERE sn = %s",sn).fetchall()[0][0] > 0:
+    check_query = sql.sql.text('''
+        SELECT
+          COUNT(*)
+        FROM
+          Users
+        WHERE sn = :sn
+    ''')
+
+    username_is_taken = db.execute(check_query ,{'sn': sn}).fetchall()[0][0] > 0
+
+    if username_is_taken:
         print("Someone already has that screen name!")
         return False
 
